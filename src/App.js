@@ -79,6 +79,7 @@ const App = () => {
            setCurrentAccount(account);
          } else {
            console.log('No authorized account found');
+           setIsLoading(false);
          }
        }
      } catch (error) {
@@ -162,7 +163,7 @@ const App = () => {
       return (
         <div className="connect-wallet-container">
           <img
-            src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
+            src="https://media3.giphy.com/media/mDEWYG76hRNV6/giphy.gif"
             alt="Monty Python Gif"
           />
           <button
@@ -190,15 +191,9 @@ const App = () => {
           <p className="header gradient-text">⚔️ Metaverse Slayer ⚔️</p>
           <p className="sub-text">Team up to protect the Metaverse!</p>
         </div>
-        <div className="connect-wallet-container">
-          <img
-            src="https://media3.giphy.com/media/mDEWYG76hRNV6/giphy.gif"
-            alt="Monty Python Gif"
-          />
-          <div>
+        
           {renderContent()}
-            </div>
-        </div>
+         
         </div>
     </div>
   );

@@ -5,15 +5,9 @@ import myEpicGame from './utils/MyEpicGame.json';
 import './Arena.css';
 import LoadingIndicator from './LoadingIndicator';
 
-/*
- * We pass in our characterNFT metadata so we can a cool card in our UI
- */
 const Arena = ({ characterNFT, setCharacterNFT  }) => {
-  // State
+
   const [gameContract, setGameContract] = useState(null);
-  /*
-   * State theat will hold our boss metadata
-   */
   const [boss, setBoss] = useState(null);
   const [attackState, setAttackState] = useState('');
   const [showToast, setShowToast] = useState(false);
@@ -29,9 +23,6 @@ const Arena = ({ characterNFT, setCharacterNFT  }) => {
         console.log(txn);
         setAttackState('hit');
               
-        /*
-        * Set your toast state to true and then false 5 seconds later
-        */
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
@@ -50,18 +41,12 @@ const Arena = ({ characterNFT, setCharacterNFT  }) => {
         setBoss(transformCharacterData(bossTxn));
     };
 
-    /*
-    * Setup logic when this event is fired off
-    */
     const onAttackComplete = (newBossHp, newPlayerHp) => {
         const bossHp = newBossHp.toNumber();
         const playerHp = newPlayerHp.toNumber();
 
         console.log(`AttackComplete: Boss Hp: ${bossHp} Player Hp: ${playerHp}`);
 
-        /*
-        * Update both player and boss Hp
-        */
         setBoss((prevState) => {
             return { ...prevState, hp: bossHp };
         });
@@ -76,9 +61,6 @@ const Arena = ({ characterNFT, setCharacterNFT  }) => {
         gameContract.on('AttackComplete', onAttackComplete);
     }
 
-    /*
-    * Make sure to clean up this event when this component is removed
-    */
     return () => {
         if (gameContract) {
             gameContract.off('AttackComplete', onAttackComplete);
@@ -115,40 +97,39 @@ const Arena = ({ characterNFT, setCharacterNFT  }) => {
   return (
     <div className="arena-container">
 
-        {showToast && (
-            <div id="toast" className="show">
-                <div id="desc">{`💥 ${boss.name} was hit for ${characterNFT.attackDamage}!`}</div>
-            </div>
-        )}
-        {/* Boss */}
-    {boss && (
-        <div className="boss-container">
-            {/* Add attackState to the className! After all, it's just class names */}
-            <div className={`boss-content ${attackState}`}>
-            <h2>🔥 {boss.name} 🔥</h2>
-            <div className="image-content">
-                <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
-                <div className="health-bar">
-                <progress value={boss.hp} max={boss.maxHp} />
-                <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
-                </div>
-            </div>
-            </div>
-            {attackState === 'attacking' && (
-            <div className="loading-indicator">
-            <LoadingIndicator />
-            <p>Attacking ⚔️</p>
-            </div>
-        )}
-            <div className="attack-container">
-            <button className="cta-button" onClick={runAttackAction}>
-                {`💥 Attack ${boss.name}`}
-            </button>
-            </div>
-        </div>
-    )}  
-  
-      {/* Replace your Character UI with this */}
+      {showToast && (
+          <div id="toast" className="show">
+              <div id="desc">{`💥 ${boss.name} was hit for ${characterNFT.attackDamage}!`}</div>
+          </div>
+      )}
+
+      {boss && (
+          <div className="boss-container">
+
+              <div className={`boss-content ${attackState}`}>
+              <h2>🔥 {boss.name} 🔥</h2>
+              <div className="image-content">
+                  <img src={boss.imageURI} alt={`Boss ${boss.name}`} />
+                  <div className="health-bar">
+                  <progress value={boss.hp} max={boss.maxHp} />
+                  <p>{`${boss.hp} / ${boss.maxHp} HP`}</p>
+                  </div>
+              </div>
+              </div>
+              {attackState === 'attacking' && (
+              <div className="loading-indicator">
+              <LoadingIndicator />
+              <p>Attacking ⚔️</p>
+              </div>
+          )}
+              <div className="attack-container">
+              <button className="cta-button" onClick={runAttackAction}>
+                  {`💥 Attack ${boss.name}`}
+              </button>
+              </div>
+          </div>
+      )}  
+
       {characterNFT && (
         <div className="players-container">
           <div className="player-container">

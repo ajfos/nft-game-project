@@ -5,9 +5,6 @@ import { ethers } from 'ethers';
 import myEpicGame from './utils/MyEpicGame.json';
 import LoadingIndicator from './LoadingIndicator';
 
-/*
- * Don't worry about setCharacterNFT just yet, we will talk about it soon!
- */
 const SelectCharacter = ({ setCharacterNFT }) => {
     const [characters, setCharacters] = useState([]);
     const [gameContract, setGameContract] = useState(null);
@@ -24,11 +21,8 @@ const SelectCharacter = ({ setCharacterNFT }) => {
             myEpicGame.abi,
             signer
           );
-      
-          /*
-           * This is the big difference. Set our gameContract in state.
-           */
           setGameContract(gameContract);
+
         } else {
           console.log('Ethereum object not found');
         }
@@ -52,9 +46,6 @@ const SelectCharacter = ({ setCharacterNFT }) => {
           }
         };
       
-        /*
-         * Add a callback method that will fire when this event is received
-         */
         const onCharacterMint = async (sender, tokenId, characterIndex) => {
           console.log(
             `CharacterNFTMinted - sender: ${sender} tokenId: ${tokenId.toNumber()} characterIndex: ${characterIndex.toNumber()}`
@@ -75,17 +66,10 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       
         if (gameContract) {
           getCharacters();
-      
-          /*
-           * Setup NFT Minted Listener
-           */
           gameContract.on('CharacterNFTMinted', onCharacterMint);
         }
       
         return () => {
-          /*
-           * When your component unmounts, let;s make sure to clean up this listener
-           */
           if (gameContract) {
             gameContract.off('CharacterNFTMinted', onCharacterMint);
           }

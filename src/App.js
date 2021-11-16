@@ -9,10 +9,6 @@ import LoadingIndicator from './LoadingIndicator';
 
 const App = () => {
 
-
-   /*
-   * Just a state variable we use to store our user's public wallet. Don't forget to import useState.
-   */
    const [currentAccount, setCurrentAccount] = useState(null);
    const [characterNFT, setCharacterNFT] = useState(null);
    const [isLoading, setIsLoading] = useState(false);
@@ -39,10 +35,7 @@ const App = () => {
         console.log('User has character NFT');
         setCharacterNFT(transformCharacterData(characterNFT));
       }
-  
-      /*
-       * Once we are done with all the fetching, set loading state to false
-       */
+
       setIsLoading(false);
     };
   
@@ -52,44 +45,39 @@ const App = () => {
     }
   }, [currentAccount]);
 
-   /*
-    * Since this method will take some time, make sure to declare it as async
-    */
-   const checkIfWalletIsConnected = async () => {
-     try {
-       const { ethereum } = window;
- 
-       if (!ethereum) {
-         console.log('Make sure you have MetaMask!');
-         return;
-       } else {
-         console.log('We have the ethereum object', ethereum);
- 
-         /*
-          * Check if we're authorized to access the user's wallet
-          */
-         const accounts = await ethereum.request({ method: 'eth_accounts' });
- 
-         /*
-          * User can have multiple authorized accounts, we grab the first one if its there!
-          */
-         if (accounts.length !== 0) {
-           const account = accounts[0];
-           console.log('Found an authorized account:', account);
-           setCurrentAccount(account);
-         } else {
-           console.log('No authorized account found');
-           setIsLoading(false);
-         }
-       }
-     } catch (error) {
-       console.log(error);
-     }
-   };
+  const checkIfWalletIsConnected = async () => {
+    try {
+      const { ethereum } = window;
 
-   /*
-   * Implement your connectWallet method here
-   */
+      if (!ethereum) {
+        console.log('Make sure you have MetaMask!');
+        return;
+      } else {
+        console.log('We have the ethereum object', ethereum);
+
+        /*
+        * Check if we're authorized to access the user's wallet
+        */
+        const accounts = await ethereum.request({ method: 'eth_accounts' });
+
+        /*
+        * User can have multiple authorized accounts, we grab the first one if its there!
+        */
+        if (accounts.length !== 0) {
+          const account = accounts[0];
+          console.log('Found an authorized account:', account);
+          setCurrentAccount(account);
+        } else {
+          console.log('No authorized account found');
+          setIsLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   const connectWalletAction = async () => {
     try {
       const { ethereum } = window;
@@ -100,15 +88,12 @@ const App = () => {
       }
 
       /*
-       * Fancy method to request access to account.
+       *  request access to account.
        */
       const accounts = await ethereum.request({
         method: 'eth_requestAccounts',
       });
 
-      /*
-       * Boom! This should print out public address once we authorize Metamask.
-       */
       console.log('Connected', accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
@@ -121,9 +106,6 @@ const App = () => {
    }, []);
 
    useEffect(() => {
-    /*
-     * The function we will call that interacts with out smart contract
-     */
     const fetchNFTMetadata = async () => {
       console.log('Checking for Character NFT on address:', currentAccount);
   
@@ -144,9 +126,6 @@ const App = () => {
       }
     };
   
-    /*
-     * We only want to run this, if we have a connected wallet
-     */
     if (currentAccount) {
       console.log('CurrentAccount:', currentAccount);
       fetchNFTMetadata();
@@ -176,9 +155,7 @@ const App = () => {
       );
     } else if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;	
-      /*
-      * If there is a connected wallet and characterNFT, it's time to battle!
-      */
+
     } else if (currentAccount && characterNFT) {
       return <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />;
     }
